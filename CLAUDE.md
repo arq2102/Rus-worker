@@ -12,7 +12,7 @@ npx cf dev          # локально, http://localhost:5173/
 npx cf workers types
 npx vp check        # формат, линтер, типы
 npx vp test --run
-npm run ci:build    # всё то же, что выполняет Workers Builds перед деплоем
+npm run ci:build    # локальная проверка одной командой: типы, линтер, тесты, сборка
 npx cf deploy       # публикует сайт; только по просьбе пользователя
 npx cf auth whoami  # проверка входа (вход: npx cf auth login)
 ```
@@ -55,7 +55,8 @@ npx cf auth whoami  # проверка входа (вход: npx cf auth login)
 Настройки в панели Cloudflare (Workers & Pages → `rus-worker` → Settings → Builds):
 
 - Production branch: `main`. Push в `main` публикует сайт.
-- Build command: `npm run ci:build` (типы, `vp check`, тесты, сборка).
-- Deploy command: `npx cf deploy --prebuilt`.
+- Build command: `npm run check && npm test` (типы, `vp check`, тесты; при `CI=true` тесты не уходят в режим ожидания).
+- Deploy command: `npx cf deploy` (сам собирает проект перед публикацией).
+- Сборки других веток включены, команда `npx cf previews deploy` (запуск не проверен).
 - API-токен для сборки Cloudflare создаёт сам; в репозитории секретов нет.
 - Версия Node.js задана в `.node-version`.
