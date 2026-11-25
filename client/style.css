@@ -1,0 +1,174 @@
+:root {
+	color-scheme: light dark;
+	--bg: #eaf2fb;
+	--card: #ffffff;
+	--text: #14243a;
+	--muted: #5b6b82;
+	--accent: #1d6fd6;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #0e1622;
+		--card: #182436;
+		--text: #e8eef7;
+		--muted: #93a4bd;
+		--accent: #4c9bff;
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+/* Атрибут hidden должен побеждать любые display ниже. */
+[hidden] {
+	display: none !important;
+}
+
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--text);
+	font:
+		16px/1.5 system-ui,
+		sans-serif;
+}
+
+main {
+	max-width: 640px;
+	margin: 0 auto;
+	padding: 16px;
+}
+
+a {
+	color: var(--accent);
+}
+
+h1 a {
+	color: inherit;
+	text-decoration: none;
+}
+
+form {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+input,
+button {
+	font: inherit;
+	border-radius: 10px;
+	padding: 10px 14px;
+	border: 1px solid color-mix(in srgb, var(--muted) 40%, transparent);
+}
+
+input {
+	flex: 1 1 200px;
+	background: var(--card);
+	color: var(--text);
+}
+
+button {
+	background: var(--accent);
+	border-color: var(--accent);
+	color: #fff;
+	cursor: pointer;
+}
+
+ul,
+ol {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#results {
+	margin-top: 8px;
+}
+
+#results button {
+	width: 100%;
+	margin-bottom: 4px;
+	text-align: left;
+	background: var(--card);
+	color: var(--text);
+}
+
+.card {
+	background: var(--card);
+	border-radius: 16px;
+	padding: 16px;
+	margin-top: 16px;
+}
+
+.card h2,
+.card h3 {
+	margin: 0 0 8px;
+}
+
+.current {
+	text-align: center;
+}
+
+.now {
+	font-size: 56px;
+	font-weight: 700;
+	display: flex;
+	justify-content: center;
+	gap: 16px;
+}
+
+dl {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	margin: 0;
+}
+
+dt {
+	color: var(--muted);
+	font-size: 14px;
+}
+
+dd {
+	margin: 0;
+	font-weight: 600;
+}
+
+#hourly {
+	display: flex;
+	gap: 16px;
+	overflow-x: auto;
+	padding-bottom: 8px;
+}
+
+#hourly li {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-width: 48px;
+}
+
+#daily li {
+	display: grid;
+	grid-template-columns: 1fr 40px 60px 100px;
+	gap: 8px;
+	padding: 8px 0;
+	border-top: 1px solid color-mix(in srgb, var(--muted) 25%, transparent);
+}
+
+#daily li span:last-child {
+	text-align: right;
+}
+
+small,
+footer {
+	color: var(--muted);
+	font-size: 13px;
+}
+
+footer {
+	margin-top: 24px;
+	text-align: center;
+}

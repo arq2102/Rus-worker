@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Погода</title>
+		<link rel="stylesheet" href="/client/style.css" />
+	</head>
+	<body>
+		<main>
+			<h1><a href="/" id="home">Погода</a></h1>
+
+			<form id="search" role="search">
+				<input
+					id="query"
+					type="search"
+					placeholder="Введите город"
+					aria-label="Город"
+					autocomplete="off"
+					required
+					minlength="2"
+				/>
+				<button type="submit">Найти</button>
+				<button type="button" id="locate">Рядом со мной</button>
+			</form>
+
+			<ul id="results" hidden></ul>
+			<p id="status" role="status"></p>
+
+			<section id="weather" hidden>
+				<div class="card current">
+					<h2 id="place"></h2>
+					<div class="now">
+						<span id="icon" aria-hidden="true"></span>
+						<span id="temp"></span>
+					</div>
+					<p id="summary"></p>
+					<dl>
+						<div>
+							<dt>Ощущается</dt>
+							<dd id="feels"></dd>
+						</div>
+						<div>
+							<dt>Влажность</dt>
+							<dd id="humidity"></dd>
+						</div>
+						<div>
+							<dt>Ветер</dt>
+							<dd id="wind"></dd>
+						</div>
+					</dl>
+				</div>
+
+				<div class="card">
+					<h3>Ближайшие 24 часа</h3>
+					<ol id="hourly"></ol>
+				</div>
+
+				<div class="card">
+					<h3>Прогноз на 7 дней</h3>
+					<ol id="daily"></ol>
+				</div>
+			</section>
+
+			<footer>Данные: <a href="https://open-meteo.com/">Open-Meteo</a> (CC BY 4.0)</footer>
+		</main>
+		<script type="module" src="/client/main.ts"></script>
+	</body>
+</html>
