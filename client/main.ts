@@ -2,13 +2,14 @@
 
 import {
 	describe,
-	fetchForecast,
+	fetchDashboard,
 	formatTemp,
 	placeFromSearch,
 	placeToUrl,
 	searchCities,
 	type Forecast,
 	type Place,
+	type Rates,
 } from "./weather.ts";
 
 const DEFAULT_PLACE: Place = { name: "Москва", lat: 55.7522, lon: 37.6156 };
@@ -45,18 +46,19 @@ function navigate(place: Place): void {
 
 async function showRoute(): Promise<void> {
 	const place = placeFromSearch(location.search) ?? DEFAULT_PLACE;
-	const signal = startRequest("Загружаю прогноз…");
+	const signal = startRequest("Загружаю погоду и курсы…");
 	weather.hidden = true;
 	try {
-		const forecast = await fetchForecast(place, signal);
+		const { forecast, rates } = await fetchDashboard(place, signal);
 		if (signal.aborted) {
 			return;
 		}
+		renderRates(rates);
 		render(place, forecast);
 		status.textContent = "";
 	} catch {
 		if (!signal.aborted) {
-			status.textContent = "Не удалось загрузить прогноз. Обновите страницу чуть позже.";
+			status.textContent = "Не удалось загрузить данные. Обновите страницу чуть позже.";
 		}
 	}
 }
@@ -76,6 +78,17 @@ function listItem(...children: HTMLElement[]): HTMLLIElement {
 
 function rain(probability: number | null | undefined): string {
 	return probability == null ? "" : `💧${probability}%`;
+}
+
+function renderRates({ values, updated }: Rates): void {
+	const number = new Intl.NumberFormat("ru", { maximumFractionDigits: 2 });
+	byId("rates").replaceChildren(
+		...Object.entries(values).map(([code, value]) =>
+			listItem(span(code, "small"), span(number.format(value), "strong")),
+		),
+	);
+	const date = new Intl.DateTimeFormat("ru", { dateStyle: "medium", timeStyle: "short" });
+	byId("rates-updated").textContent = `Курсы обновлены: ${date.format(new Date(updated))}`;
 }
 
 function render(place: Place, { current, hourly, daily }: Forecast): void {

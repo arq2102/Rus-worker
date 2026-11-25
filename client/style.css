@@ -136,6 +136,22 @@ dd {
 	font-weight: 600;
 }
 
+#rates {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 12px;
+	margin-bottom: 8px;
+}
+
+#rates li {
+	display: flex;
+	flex-direction: column;
+}
+
+#rates strong {
+	font-size: 18px;
+}
+
 #hourly {
 	display: flex;
 	gap: 16px;

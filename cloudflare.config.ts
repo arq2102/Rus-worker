@@ -9,6 +9,8 @@ export default defineConfig({
 		// Любой неизвестный путь отдаёт index.html, а маршрут разбирает клиент.
 		assets: {
 			notFoundHandling: "single-page-application",
+			// Иначе при открытии /api/... прямо в браузере вернулась бы страница SPA.
+			runWorkerFirst: ["/api/*"],
 		},
 	},
 });

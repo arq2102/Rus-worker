@@ -52,6 +52,12 @@
 				</div>
 
 				<div class="card">
+					<h3>Курс валют за 1 доллар</h3>
+					<ul id="rates"></ul>
+					<small id="rates-updated"></small>
+				</div>
+
+				<div class="card">
 					<h3>Ближайшие 24 часа</h3>
 					<ol id="hourly"></ol>
 				</div>
@@ -62,7 +68,10 @@
 				</div>
 			</section>
 
-			<footer>Данные: <a href="https://open-meteo.com/">Open-Meteo</a> (CC BY 4.0)</footer>
+			<footer>
+				Погода: <a href="https://open-meteo.com/">Open-Meteo</a> (CC BY 4.0). Курсы:
+				<a href="https://www.exchangerate-api.com">Rates By Exchange Rate API</a>
+			</footer>
 		</main>
 		<script type="module" src="/client/main.ts"></script>
 	</body>

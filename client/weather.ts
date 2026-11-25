@@ -1,4 +1,19 @@
-// Запросы к Open-Meteo и разбор данных. Здесь нет работы с DOM.
+// Запросы и разбор данных. Здесь нет работы с DOM, поэтому файл используют и браузер, и Worker.
+
+// Курс этих валют показываем: сколько единиц стоит 1 доллар.
+export const CURRENCIES = ["KZT", "RUB", "EUR", "CNY", "GBP", "TRY"] as const;
+
+export interface Rates {
+	base: "USD";
+	updated: string; // когда источник обновил курсы, ISO 8601
+	values: Record<string, number>;
+}
+
+// Ответ нашего Worker на /api/dashboard.
+export interface Dashboard {
+	forecast: Forecast;
+	rates: Rates;
+}
 
 export interface Place {
 	name: string;
@@ -44,10 +59,11 @@ interface GeocodingResponse {
 	}[];
 }
 
-async function getJson<T>(url: URL, signal: AbortSignal): Promise<T> {
-	const response = await fetch(url, { signal });
+export async function getJson<T>(url: string | URL, init: RequestInit): Promise<T> {
+	const response = await fetch(url, init);
 	if (!response.ok) {
-		throw new Error(`HTTP ${response.status}`);
+		const source = response.url ? ` (${new URL(response.url).host})` : "";
+		throw new Error(`HTTP ${response.status}${source}`);
 	}
 	return (await response.json()) as T;
 }
@@ -55,7 +71,7 @@ async function getJson<T>(url: URL, signal: AbortSignal): Promise<T> {
 export async function searchCities(query: string, signal: AbortSignal): Promise<City[]> {
 	const url = new URL("https://geocoding-api.open-meteo.com/v1/search");
 	url.search = new URLSearchParams({ name: query, count: "5", language: "ru" }).toString();
-	const data = await getJson<GeocodingResponse>(url, signal);
+	const data = await getJson<GeocodingResponse>(url, { signal });
 	return (data.results ?? []).map((item) => ({
 		name: item.name,
 		lat: item.latitude,
@@ -64,7 +80,12 @@ export async function searchCities(query: string, signal: AbortSignal): Promise<
 	}));
 }
 
-export function fetchForecast(place: Place, signal: AbortSignal): Promise<Forecast> {
+export function fetchDashboard(place: Place, signal: AbortSignal): Promise<Dashboard> {
+	const params = new URLSearchParams({ lat: String(place.lat), lon: String(place.lon) });
+	return getJson<Dashboard>(`/api/dashboard?${params}`, { signal });
+}
+
+export function fetchForecast(place: Place, init: RequestInit): Promise<Forecast> {
 	const url = new URL("https://api.open-meteo.com/v1/forecast");
 	url.search = new URLSearchParams({
 		latitude: String(place.lat),
@@ -78,7 +99,7 @@ export function fetchForecast(place: Place, signal: AbortSignal): Promise<Foreca
 		wind_speed_unit: "ms",
 		timezone: "auto",
 	}).toString();
-	return getJson<Forecast>(url, signal);
+	return getJson<Forecast>(url, init);
 }
 
 // Коды погоды WMO: [максимальный код группы, значок, описание].
